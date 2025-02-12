@@ -1,52 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Scoped CSS Variables and JS</title>
-  <link rel="icon" href="https://fav.farm/🔥" />
-</head>
-<body>
-  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scoped CSS Variables and JS</title>
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <h2>Update CSS Variables with <span class="hl">JS</span></h2>
 
-  <div class="controls">
-    <label for="spacing">Spacing:</label>
-    <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+    <div class="controls">
+      <label for="spacing">Spacing:</label>
+      <input
+        id="spacing"
+        type="range"
+        name="spacing"
+        min="10"
+        max="200"
+        value="10"
+        data-sizing="px"
+      />
 
-    <label for="blur">Blur:</label>
-    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+      <label for="blur">Blur:</label>
+      <input
+        id="blur"
+        type="range"
+        name="blur"
+        min="0"
+        max="25"
+        value="10"
+        data-sizing="px"
+      />
 
-    <label for="base">Base Color</label>
-    <input id="base" type="color" name="base" value="#ffc600">
-  </div>
+      <label for="base">Base Color</label>
+      <input id="base" type="color" name="base" value="#ffc600" />
+    </div>
 
-  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+    <img
+      src="https://images.unsplash.com/photo-1444723121867-7a241cacace9?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx"
+      alt="Cityscape"
+      width="700"
+    />
 
-  <style>
+    <style>
+      /* :root = <html> element */
+      :root {
+        --base: #ffc600;
+        --spacing: 10px;
+        --blur: 10px;
+      }
 
-    /*
-      misc styles, nothing to do with CSS variables
-    */
+      img {
+        padding: var(--spacing);
+        background: var(--base);
+        filter: blur(var(--blur));
+      }
 
-    body {
-      text-align: center;
-      background: #193549;
-      color: white;
-      font-family: 'helvetica neue', sans-serif;
-      font-weight: 100;
-      font-size: 50px;
-    }
+      .hl {
+        color: var(--base);
+      }
 
-    .controls {
-      margin-bottom: 50px;
-    }
+      /*
+        misc styles, nothing to do with CSS variables
+      */
 
-    input {
-      width: 100px;
-    }
-  </style>
+      body {
+        text-align: center;
+        background: #193549;
+        color: white;
+        font-family: "helvetica neue", sans-serif;
+        font-weight: 100;
+        font-size: 50px;
+      }
 
-  <script>
-  </script>
+      .controls {
+        margin-bottom: 50px;
+      }
 
-</body>
+      input {
+        width: 100px;
+      }
+    </style>
+
+    <script>
+      const inputs = document.querySelectorAll(".controls input");
+
+      function hundleUpdate() {
+        console.log(this); // ex. change input value of Spacing => <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+        console.log(this.name); // 'spacing' or 'blur' or 'base'
+        console.log(this.value); // ex. change input value of Spacing => 10 or 33 or 120 or ...
+
+        const suffixTest = this.dataset;
+        console.log(suffixTest); // DOMStringMap { sizing → "px" }
+        const suffix = this.dataset.sizing || ""; // no suffix for base color
+        console.log(suffix); // px or ""
+
+        document.documentElement.style.setProperty(
+          `--${this.name}`,
+          this.value + suffix
+        );
+        // document.documentElement = <html>, change the root(html) styling
+        // :root {
+        //   --base: #ffc600;
+        //   --spacing: 10px;
+        //   --blur: 10px;
+        // }
+      }
+
+      inputs.forEach((input) => {
+        input.addEventListener("change", hundleUpdate);
+      });
+      // This ensures input updates by cliking to a specific value
+
+      inputs.forEach((input) => {
+        input.addEventListener("mousemove", hundleUpdate);
+      });
+      // This ensures input updates by mousemove
+
+      inputs.forEach((input) => {
+        input.addEventListener("input", hundleUpdate);
+      });
+      // The "input" event fires whenever the value changes, even while dragging sliders or selecting colors in the picker.
+      // This ensures real-time updates to the --base color variable.
+    </script>
+  </body>
 </html>
