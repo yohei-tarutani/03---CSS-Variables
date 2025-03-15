@@ -85,7 +85,7 @@
       const inputs = document.querySelectorAll(".controls input");
 
       function hundleUpdate() {
-        console.log(this); // ex. change input value of Spacing => <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+        console.log(this); // this = <input> element / ex.change input value of Spacing => <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
         console.log(this.name); // 'spacing' or 'blur' or 'base'
         console.log(this.value); // ex. change input value of Spacing => 10 or 33 or 120 or ...
 
